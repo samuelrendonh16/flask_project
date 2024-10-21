@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Orden de Compra</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .logo { width: 150px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 5px; }
+        .totales { margin-top: 20px; text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='img/logoEmpresa.png') }}" alt="Logo" class="logo">
+        <h1>CCD INGENIERÍA Y CONSTRUCCIONES S.A.S.</h1>
+        <p>NIT. 901.092.189-5</p>
+    </div>
+    <h2>Orden de Compra N° {{ orden.numero }}</h2>
+    <p><strong>Fecha:</strong> {{ orden.fecha }}</p>
+    <p><strong>Proveedor:</strong> {{ orden.proveedor }}</p>
+    <p><strong>Observaciones:</strong> {{ orden.observaciones }}</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Referencia</th>
+                <th>Descripción</th>
+                <th>Unidad</th>
+                <th>Cantidad</th>
+                <th>Valor Unitario</th>
+                <th>Valor Total</th>
+                <th>Descuento</th>
+                <th>IVA</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in orden.detalles %}
+            <tr>
+                <td>{{ detalle.idReferencia }}</td>
+                <td>{{ detalle.descripcion }}</td>
+                <td>{{ detalle.unidad }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>{{ detalle.valorUnitario }}</td>
+                <td>{{ detalle.valorTotal }}</td>
+                <td>{{ detalle.descuento }}</td>
+                <td>{{ detalle.iva }}</td>
+                <td>{{ detalle.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totales">
+        <p><strong>Total Unidades:</strong> {{ orden.totalUnidades }}</p>
+        <p><strong>Subtotal:</strong> {{ orden.subtotal }}</p>
+        <p><strong>Descuento Total:</strong> {{ orden.valorDescuento }}</p>
+        <p><strong>Total Impuestos:</strong> {{ orden.totalImpuestos }}</p>
+        <p><strong>Total Documento:</strong> {{ orden.totalDocumento }}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIG SISTEMAS</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header class="header">
+        <img src="/static/img/Logo.png" alt="Logo de la empresa" class="logo">
+        <button class="button">
+            <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
+        <nav class="nav activo">
+            <ul class="ul">
+                <li><button class="nav-btn" id="btnInventario"><i class="icon-inventario"></i> Inventario</button></li>
+                <li><button class="nav-btn" id="btnMaestros"><i class="icon-maestros"></i> Maestros</button></li>
+                <li><button class="nav-btn" id="btnInformes"><i class="icon-informes"></i> Informes</button></li>
+                <!-- <li><button class="nav-btn" id="btnLicencia"><i class="icon-licencia"></i> Licencia</button></li> -->
+                <li><button class="nav-btn" id="btnConfiguracion"><i class="icon-configuracion"></i> Configuración</button></li>
+                <li>
+                    <a href="{{ url_for('logout') }}" class="nav-btn text-decoration-none text-info fw-semibold btn btn-info text-white w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/>
+                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                        </svg> 
+                        cerrar sesion
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Panel de Inventario -->
+        <div id="inventarioPanel" class="panel">
+            <div class="panel-header">
+                <h2>Inventario</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <i class="icon-search"></i>
+                <input type="text" placeholder="Escriba palabras clave aquí">
+            </div>
+            <ul id="inventarioLista">
+                <!-- <li id="btnOrdenesCompras"><i class="icon-ordenes"></i> Órdenes de compras</li> -->
+                <li id="btnComprasProveedor"><i class="icon-compras"></i> Compras proveedor</li>
+                <!-- <li id="btnTrasladosBodegas"><i class="icon-traslados"></i> Traslados a Bodegas</li> -->
+                <li id="btnEntradasBodegas"><i class="icon-entradas"></i> Entradas a Bodegas</li>
+                <li id="btnSalidasBodegas"><i class="icon-salidas"></i> Salidas a Bodegas</li>
+                <li id="btnConsultaInventario"><i class="icon-consulta"></i> Consulta Inventario</li>
+                <!-- <li id="btnMaximosMinimos"><i class="icon-maxmin"></i> Máximos y Mínimos</li>
+                <li id="btnInventarioFisico"><i class="icon-fisico"></i> Inventario Físico</li> -->
+            </ul>
+        </div>
+
+        <!-- Panel de Maestros -->
+        <div id="maestrosPanel" class="panel">
+            <div class="panel-header">
+                <h2>Maestros</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <i class="icon-search"></i>
+                <input type="text" placeholder="Escriba palabras clave aquí">
+            </div>
+            <ul id="maestrosLista">
+                <!-- <li class="expandable">
+                    <div class="main-item"><i class="icon-terceros"></i>Terceros<span class="expand-icon">▼</span></div>
+                    <ul class="sub-menu">
+                        <li><i class="icon-clientes"></i>Clientes</li>
+                        <li class="btnProveedores"><i class="icon-proveedores"></i>Proveedores</li>
+                        <li><i class="icon-vendedores"></i>Empleados</li>
+                    </ul>
+                </li> -->
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-productos"></i>Productos<span class="expand-icon">▼</span></div>
+                    <ul class="sub-menu">
+                        <li id="btnGruposFamiliasCategorias"><i class="icon-grupos"></i>Grupos</li>
+                        <!-- <li id="btnSubGrupos"><i class="icon-subgrupos"></i>SubGrupos</li>
+                        <li id="btnSubCategorias"><i class="icon-subcategorias"></i>SubCategorias</li>
+                        <li id="btnUnidades"><i class="icon-unidades"></i>Unidades</li>
+                        <li id="btnEstadoProducto"><i class="fas fa-clipboard-check"></i>Estado Producto</li> -->
+                        <li id="btnProductosArticulosReferencias"><i class="icon-articulos"></i>Referencias</li>
+                    </ul>
+                </li>
+                <!-- <li class="expandable">
+                    <div class="main-item"><i class="icon-ubicacion"></i>Ubicación<span class="expand-icon">▼</span></div>
+                    <ul class="sub-menu">
+                        <li id="btnPaises"><i class="fas fa-globe"></i>Paises</li>
+                        <li id="btnDepartamentos"><i class="fas fa-map"></i>Departamentos</li>
+                        <li id="btnCiudades"><i class="fas fa-city"></i>Ciudades</li>
+                    </ul>
+                </li> -->
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-otros"></i>Otros<span class="expand-icon">▼</span></div>
+                    <ul class="sub-menu">
+                        <li id="btnBancos"><i class="fas fa-university"></i>Bancos</li>
+                        <li id="btnBodegas"><i class="icon-bodegas"></i>Bodegas</li>
+                    </ul>
+                </li>
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-permisos"></i>Permisos<span class="expand-icon">▼</span></div>
+                    <ul class="sub-menu">
+                        <li id="btnCreacionUsuarios"><i class="fas fa-user-plus"></i> Creación de Usuarios</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Panel de Consulta de Inventario -->
+        <div id="consultaInventarioPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Consulta de Inventario</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="filter-section">
+                <label><input type="radio" name="filter" value="todas"> Todas</label>
+                <label><input type="radio" name="filter" value="conSaldo"> Con Saldo</label>
+                <label><input type="radio" name="filter" value="servicio"> Servicio</label>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="filtroInventario" placeholder="Buscar por ID o Nombre">
+            </div>
+            <div class="table-container">
+                <table id="inventarioTable">
+                    <thead>
+                        <tr>
+                            <th>ID Referencia</th>
+                            <th>Referencia</th>
+                            <th>Marca</th>
+                            <th>Precio Venta</th>
+                            <th>Ubicación</th>
+                            <th>Grupo</th>
+                            <th>ID Unidad</th>
+                            <th>Bodega</th>
+                            <th>Cantidad</th>
+                            <th>Costo</th>
+                            <th>Estado Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Panel de Subcategorías -->
+        <div id="subcategoriasPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Maestro de Subcategorías</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoSubcategoria" class="btn-icon">Nuevo</button>
+                    <button id="btnGuardarSubcategoria" class="btn-icon" disabled>Guardar</button>
+                    <button id="btnEditarSubcategoria" class="btn-icon" disabled>Editar</button>
+                    <button id="btnEliminarSubcategoria" class="btn btn-danger" disabled>Eliminar</button>
+                    <button id="btnCancelarSubcategoria" class="btn-icon" disabled>Cancelar</button>
+                    <button id="btnCerrarSubcategoria" class="btn-icon">Cerrar</button>
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="codigoSubcategoria">* Código</label>
+                    <input type="text" id="codigoSubcategoria" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="descripcionSubcategoria">* Descripción</label>
+                    <input type="text" id="descripcionSubcategoria" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="grupoSubcategoria">* Grupo</label>
+                    <select id="grupoSubcategoria" required disabled>
+                        <option value="">Seleccione un Grupo</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="subgrupoSubcategoria">* Subgrupo</label>
+                    <select id="subgrupoSubcategoria" required disabled>
+                        <option value="">Seleccione un SubGrupo</option>
+                    </select>
+                </div>
+                <div class="form-row checkbox-group">
+                    <label><input type="checkbox" id="estadoSubcategoria" disabled> Estado</label>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="buscarSubcategoria" placeholder="Buscar...">
+            </div>
+            <div class="table-container">
+                <table id="subcategoriasTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Grupo</th>
+                            <th>Subgrupo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las subcategorías se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="bodegasPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Maestro de Bodegas</h2>
+                <div class="panel-controls">
+
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="btnNuevoBodega">Nuevo</button>
+                <button id="btnGuardarBodega" disabled>Guardar</button>
+                <button id="btnEditarBodega" disabled>Editar</button>
+                <button id="btnEliminarBodega" disabled>Eliminar</button>
+                <button id="btnCancelarBodega" disabled>Cancelar</button>
+            </div>
+            <form id="bodegaForm">
+                <label for="IdBodega">Código:</label>
+                <input type="text" id="IdBodega" name="IdBodega" required disabled>
+                
+                <label for="Descripcion">Descripción:</label>
+                <input type="text" id="Descripcion" name="Descripcion" required disabled>
+                
+                <label for="Estado">Estado:</label>
+                <input type="checkbox" id="Estado" name="Estado" disabled>
+        
+                <label for="Email">Email:</label>
+                <input type="email" id="Email" name="Email" disabled>
+        
+                <label for="nombrepunto">Nombre del punto:</label>
+                <input type="text" id="nombrepunto" name="nombrepunto" disabled>
+        
+                <label for="direccionpunto">Dirección del punto:</label>
+                <input type="text" id="direccionpunto" name="direccionpunto" disabled>
+        
+                <label for="telefonopunto">Teléfono del punto:</label>
+                <input type="text" id="telefonopunto" name="telefonopunto" disabled>
+        
+                <label for="Encargado">Encargado:</label>
+                <input type="text" id="Encargado" name="Encargado" disabled>
+            </form>
+            <div class="table-container">
+                <table id="bodegasTable">
+                    <thead>
+                        <tr>
+                            <th>Id Bodega</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>Email</th>
+                            <th>Nombre del punto</th>
+                            <th>Dirección del punto</th>
+                            <th>Teléfono del punto</th>
+                            <th>Encargado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal de Contraseña -->
+        <div id="passwordModal" class="modal">
+            <div class="modal-content">
+                <h2>Ingrese la contraseña</h2>
+                <div class="password-input-container">
+                    <input type="password" id="passwordInput">
+                    <button id="togglePassword" type="button">👁️</button>
+                </div>
+                <div class="modal-buttons">
+                    <button id="submitPassword">Enviar</button>
+                    <button id="cancelPassword">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Configuración -->
+        <div id="configPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Configuración</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <i class="icon-search"></i>
+                <input type="text" placeholder="Escriba palabras clave aquí">
+            </div>
+            <ul id="configList">
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-config"></i>Configuración</div>
+                </li>
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-empresa"></i>Empresa</div>
+                    <ul class="sub-menu">
+                        <li id="btnConsecutivos"><i class="icon-consecutivos"></i>Consecutivos</li>
+                        <li><i class="icon-licencia"></i>Configurar licencia MIG</li>
+                        <li><i class="icon-empresa-details"></i>Empresa</li>
+                        <li><i class="icon-clean"></i>Limpiar empresa</li>
+                    </ul>
+                </li>
+                <li class="expandable">
+                    <div class="main-item"><i class="icon-otros"></i>Otros</div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Panel de Licencia -->
+        <div id="licenciaPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Licencia MIG</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div id="licenciaContent">
+                <form id="licenciaForm">
+                    <label for="nit">NIT:</label>
+                    <input type="text" id="nit" name="nit" required>
+                    
+                    <label for="razonSocial">Razón Social:</label>
+                    <input type="text" id="razonSocial" name="razonSocial" required>
+                    
+                    <label for="nombreComercial">Nombre Comercial:</label>
+                    <input type="text" id="nombreComercial" name="nombreComercial" required>
+                    
+                    <label for="ubicacionComercial">Ubicación Comercial:</label>
+                    <input type="text" id="ubicacionComercial" name="ubicacionComercial" required>
+                    
+                    <label for="ciudad">Ciudad:</label>
+                    <select id="ciudad" name="ciudad" required>
+                        <option value="">Seleccione una ciudad</option>
+                    </select>
+                    
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" required>
+                    
+                    <label for="version">Versión:</label>
+                    <input type="text" id="version" name="version" required>
+                    
+                    <label for="numeroLicencia">Número de Licencia:</label>
+                    <input type="text" id="numeroLicencia" name="numeroLicencia" required>
+                    
+                    <label for="cantidadUsuarios">Cantidad de Usuarios:</label>
+                    <input type="number" id="cantidadUsuarios" name="cantidadUsuarios" required>
+                    
+                    <label for="tipoLicencia">Tipo Licencia:</label>
+                    <select id="tipoLicencia" name="tipoLicencia" required>
+                        <option value="RENTA">RENTA</option>
+                        <option value="COMPRA">COMPRA</option>
+                    </select>
+                    
+                    <div id="fechaVencimientoContainer">
+                        <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+                        <input type="date" id="fechaVencimiento" name="fechaVencimiento">
+                    </div>
+                    
+                    <button type="submit">Generar Licencia</button>
+                </form>
+                <div id="licenciaInfo" style="display: none;">
+                    <!-- Información de la licencia se mostrará aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Verificación de Licencia -->
+        <div id="licenciaModal" class="modal">
+            <div class="modal-content">
+                <h2>Verificar Licencia</h2>
+                <p>Ingrese la licencia recibida por correo:</p>
+                <input type="text" id="licenciaInput">
+                <button id="verificarLicencia">Verificar</button>
+            </div>
+        </div>
+
+        <!-- Panel de Entradas de Inventario -->
+        <div id="entradasInventarioPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Entradas de Inventario</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoEntrada" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarEntrada" class="btn btn-success">Guardar</button>
+                    <button id="btnEditarEntrada" class="btn btn-warning">Editar</button>
+                    <button id="btnCancelarEntrada" class="btn btn-secondary">Cancelar</button>
+                    <button id="btnBuscarEntrada" class="btn btn-info">Buscar</button>
+                    <button id="btnCerrarEntrada" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            
+            <form id="entradaInventarioForm" class="row g-3">
+                <div class="col-md-3">
+                    <label for="consecutivoEntrada" class="form-label">Consecutivo:</label>
+                    <select id="consecutivoEntrada" class="form-select" required>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="numeroEntrada" class="form-label">Número:</label>
+                    <input type="text" id="numeroEntrada" class="form-control" required readonly>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check mt-4">
+                        <input type="checkbox" id="anuladoEntrada" class="form-check-input">
+                        <label for="anuladoEntrada" class="form-check-label">Anulado</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="bodegaEntrada" class="form-label">* Bodega:</label>
+                    <select id="bodegaEntrada" class="form-select" required>
+                        <option value="">Seleccione una bodega</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaEntrada" class="form-label">Fecha:</label>
+                    <input type="date" id="fechaEntrada" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaCreacionEntrada" class="form-label">Fecha Creación:</label>
+                    <input type="date" id="fechaCreacionEntrada" class="form-control" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="centroCostosEntrada" class="form-label">Centro de Costos:</label>
+                    <select id="centroCostosEntrada" class="form-select">
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="observacionesEntrada" class="form-label">Observaciones:</label>
+                    <textarea id="observacionesEntrada" class="form-control" rows="3"></textarea>
+                </div>
+            </form>
+
+            <div class="totales-section row mt-3">
+                <div class="col-md-3">
+                    <label for="totalUnidades" class="form-label">Total unidades:</label>
+                    <input type="number" id="totalUnidades" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="subtotal" class="form-label">Subtotal:</label>
+                    <input type="number" id="subtotal" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIVA" class="form-label">Total IVA:</label>
+                    <input type="number" id="totalIVA" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalImpoconsumo" class="form-label">Total Impoconsumo:</label>
+                    <input type="number" id="totalImpoconsumo" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalICUI" class="form-label">Total ICUI:</label>
+                    <input type="number" id="totalICUI" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIBUA" class="form-label">Total IBUA:</label>
+                    <input type="number" id="totalIBUA" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIPC" class="form-label">Total IPC:</label>
+                    <input type="number" id="totalIPC" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalDocumento" class="form-label">Total Documento:</label>
+                    <input type="number" id="totalDocumento" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="table-responsive mt-3">
+                <table id="detallesEntradaTable" class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>IdReferencia Buscar con Enter</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor</th>
+                            <th>IVA</th>
+                            <th>Impoconsumo</th>
+                            <th>IPC</th>
+                            <th>Imp_ibua</th>
+                            <th>Imp_icui</th>
+                            <th>Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los detalles se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Panel de Salidas de Inventario -->
+        <div id="salidasInventarioPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Salidas de Inventario</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoSalida" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarSalida" class="btn btn-success">Guardar</button>
+                    <button id="btnEditarSalida" class="btn btn-warning">Editar</button>
+                    <button id="btnCancelarSalida" class="btn btn-secondary">Cancelar</button>
+                    <button id="btnBuscarSalida" class="btn btn-info">Buscar</button>
+                    <button id="btnCerrarSalida" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            
+            <form id="salidaInventarioForm" class="row g-3">
+                <div class="col-md-3">
+                    <label for="consecutivoSalida" class="form-label">Consecutivo:</label>
+                    <select id="consecutivoSalida" class="form-select" required>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="numeroSalida" class="form-label">Número:</label>
+                    <input type="text" id="numeroSalida" class="form-control" required readonly>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check mt-4">
+                        <input type="checkbox" id="anuladoSalida" class="form-check-input">
+                        <label for="anuladoSalida" class="form-check-label">Anulado</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="bodegaSalida" class="form-label">* Bodega:</label>
+                    <select id="bodegaSalida" class="form-select" required>
+                        <option value="">Seleccione una bodega</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaSalida" class="form-label">Fecha:</label>
+                    <input type="date" id="fechaSalida" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaCreacionSalida" class="form-label">Fecha Creación:</label>
+                    <input type="date" id="fechaCreacionSalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="centroCostosSalida" class="form-label">Centro de Costos:</label>
+                    <select id="centroCostosSalida" class="form-select">
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="observacionesSalida" class="form-label">Observaciones:</label>
+                    <textarea id="observacionesSalida" class="form-control" rows="3"></textarea>
+                </div>
+            </form>
+
+            <div class="totales-section row mt-3">
+                <div class="col-md-3">
+                    <label for="totalUnidadesSalida" class="form-label">Total unidades:</label>
+                    <input type="number" id="totalUnidadesSalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="subtotalSalida" class="form-label">Subtotal:</label>
+                    <input type="number" id="subtotalSalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIVASalida" class="form-label">Total IVA:</label>
+                    <input type="number" id="totalIVASalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalImpoconsumoSalida" class="form-label">Total Impoconsumo:</label>
+                    <input type="number" id="totalImpoconsumoSalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalICUISalida" class="form-label">Total ICUI:</label>
+                    <input type="number" id="totalICUISalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIBUASalida" class="form-label">Total IBUA:</label>
+                    <input type="number" id="totalIBUASalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIPCSalida" class="form-label">Total IPC:</label>
+                    <input type="number" id="totalIPCSalida" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalDocumentoSalida" class="form-label">Total Documento:</label>
+                    <input type="number" id="totalDocumentoSalida" class="form-control" readonly>
+                </div>
+            </div>
+
+            <div class="table-responsive mt-3">
+                <table id="detallesSalidaTable" class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>IdReferencia Buscar con Enter</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor</th>
+                            <th>Impoconsumo</th>
+                            <th>IPC</th>
+                            <th>Imp_ibua</th>
+                            <th>Imp_icui</th>
+                            <th>Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los detalles se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Panel de Traslados de Inventario -->
+        <div id="trasladosInventarioPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Traslados de Inventario</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoTraslado" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarTraslado" class="btn btn-success">Guardar</button>
+                    <button id="btnEditarTraslado" class="btn btn-warning">Editar</button>
+                    <button id="btnCancelarTraslado" class="btn btn-secondary">Cancelar</button>
+                    <button id="btnBuscarTraslado" class="btn btn-info">Buscar</button>
+                    <button id="btnCerrarTraslado" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            
+            <form id="trasladoInventarioForm" class="row g-3">
+                <div class="col-md-3">
+                    <label for="consecutivoTraslado" class="form-label">Consecutivo:</label>
+                    <select id="consecutivoTraslado" class="form-select" required>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="numeroTraslado" class="form-label">Número:</label>
+                    <input type="text" id="numeroTraslado" class="form-control" required readonly>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check mt-4">
+                        <input type="checkbox" id="anuladoTraslado" class="form-check-input">
+                        <label for="anuladoTraslado" class="form-check-label">Anulado</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="bodegaOrigenTraslado" class="form-label">* Bodega Origen:</label>
+                    <select id="bodegaOrigenTraslado" class="form-select" required>
+                        <option value="">Seleccione una bodega</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="bodegaDestinoTraslado" class="form-label">* Bodega Destino:</label>
+                    <select id="bodegaDestinoTraslado" class="form-select" required>
+                        <option value="">Seleccione una bodega</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaTraslado" class="form-label">Fecha:</label>
+                    <input type="date" id="fechaTraslado" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label for="fechaCreacionTraslado" class="form-label">Fecha Creación:</label>
+                    <input type="date" id="fechaCreacionTraslado" class="form-control" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label for="centroCostosTraslado" class="form-label">Centro de Costos:</label>
+                    <select id="centroCostosTraslado" class="form-select">
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label for="observacionesTraslado" class="form-label">Observaciones:</label>
+                    <textarea id="observacionesTraslado" class="form-control" rows="3"></textarea>
+                </div>
+            </form>
+
+            <div class="totales-section row mt-3">
+                <div class="col-md-3">
+                    <label for="totalUnidades" class="form-label">Total unidades:</label>
+                    <input type="number" id="totalUnidadesTraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="subtotal" class="form-label">Subtotal:</label>
+                    <input type="number" id="subtotalTraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIVA" class="form-label">Total IVA:</label>
+                    <input type="number" id="totalIVATraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalImpoconsumo" class="form-label">Total Impoconsumo:</label>
+                    <input type="number" id="totalImpoconsumoTraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalICUI" class="form-label">Total ICUI:</label>
+                    <input type="number" id="totalICUITraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIBUA" class="form-label">Total IBUA:</label>
+                    <input type="number" id="totalIBUATraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalIPC" class="form-label">Total IPC:</label>
+                    <input type="number" id="totalIPCTraslados" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="totalDocumento" class="form-label">Total Documento:</label>
+                    <input type="number" id="totalDocumentoTraslados" class="form-control" readonly>
+                </div>
+            </div>
+            
+            <div class="table-responsive mt-3">
+                <table id="detallesTrasladoTable" class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>IdReferencia Buscar con Enter</th>
+                            <th>Descripción</th>
+                            <th>Unidad</th>
+                            <th>Cantidad</th>
+                            <th>Valor</th>
+                            <th>IVA</th>
+                            <th>Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los detalles se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Modal de Búsqueda de Referencias -->
+        <div id="busquedaReferenciasModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Búsqueda de referencias</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="filter-options">
+                        <label><input type="radio" name="filter" value="todas" checked> Todas</label>
+                        <label><input type="radio" name="filter" value="conSaldo"> Con Saldo</label>
+                        <label><input type="checkbox" id="servicioFilter"> Servicio</label>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" id="buscarReferencia" placeholder="Buscar...">
+                        <button id="btnBuscarReferencia" class="icon-button"><i class="fas fa-search"></i> <span class="button-text">Buscar</span></button>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="btnConfirmarReferencia" class="icon-button"><i class="fas fa-check"></i> <span class="button-text">Confirmar</span></button>
+                        <button id="btnHojaVidaReferencia" class="icon-button"><i class="fas fa-file-alt"></i> <span class="button-text">Hoja de vida</span></button>
+                        <button id="btnSalirBusquedaReferencia" class="icon-button"><i class="fas fa-door-open"></i> <span class="button-text">Salir</span></button>
+                    </div>
+                    <div class="table-container">
+                        <table id="referenciasTable">
+                            <thead>
+                                <tr>
+                                    <th>Id Referencia</th>
+                                    <th>Referencia</th>
+                                    <th>Precio Venta1</th>
+                                    <th>IVA</th>
+                                    <th>Ubicacion</th>
+                                    <th>Bodega</th>
+                                    <th>Id Unidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Las filas se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>    
+        </div> 
+    
+        <!-- Panel de Maestro de Referencias -->
+        <div id="maestroReferencias" class="panel">
+            <div class="toolbar">
+                <button class="toolbar-btn" id="btnNuevoProducto">Nuevo</button>
+                <button class="toolbar-btn" id="btnGuardarProducto" disabled>Guardar</button>
+                <button class="toolbar-btn" id="btnEditarProducto" disabled>Editar</button>
+                <button class="toolbar-btn" id="btnCancelarProducto" disabled>Cancelar</button>
+                <button class="toolbar-btn" id="btnRegistroAnteriorProducto">Registro Anterior</button>
+                <button class="toolbar-btn" id="btnImportarExcel" class="toolbar-btn">Importar desde Excel</button>
+                <button class="toolbar-btn" id="btnBuscarProducto">Buscar</button>
+                <button class="toolbar-btn" id="btnCerrarProducto">Cerrar</button>
+            </div>
+
+            <div id="importarExcelModal" class="modal">
+                <div class="modal-content">
+                    <h2>Importar Productos desde Excel</h2>
+                    <p>Seleccione el archivo Excel con los productos a importar:</p>
+                    <input type="file" id="excelFileInput" accept=".xlsx, .xls">
+                    <button id="btnProcesarExcel">Procesar Archivo</button>
+                    <button id="btnCerrarModal">Cerrar</button>
+                </div>
+            </div>
+        
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="codigo">* Código</label>
+                    <input type="text" id="codigo" required disabled>
+                </div>
+                
+                <div class="form-row checkbox-group">
+                    <label><input type="checkbox" id="esServicio" disabled> Es servicio</label>
+                    <label><input type="checkbox" id="activo" disabled> Activo</label>
+                    <label><input type="checkbox" id="compuesto" disabled> Compuesto</label>
+                    <label><input type="checkbox" id="agotado" disabled> Agotado</label>
+                    <label><input type="checkbox" id="modificaPrecio" disabled> Modifica precio</label>
+                </div>
+                
+                <div class="form-row">
+                    <label for="descripcion">* Descripción</label>
+                    <input type="text" id="descripcion" required disabled>
+                </div>
+                
+                <div class="form-row">
+                    <label for="grupo">* Grupo</label>
+                    <select id="grupo" required disabled>
+                        <option value="">Seleccione un grupo</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <label for="subgrupo">Subgrupo</label>
+                    <select id="subgrupo" disabled>
+                        <option value="">Seleccione un SubGrupo</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <label for="subcategoria">Subcategoría</label>
+                    <select id="subcategoria" disabled>
+                        <option value="">Seleccione una SubCategoria</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <label for="unidad">* Unidad</label>
+                    <select id="unidad" name="unidad" required disabled>
+                        <option value="">Seleccione una Unidad</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <label for="bodega">Bodega</label>
+                    <select id="bodega" disabled></select>
+                </div>
+                
+                <div class="form-row">
+                    <label for="costo">Costo</label>
+                    <input type="number" id="costo" step="0.01" disabled>
+                </div>
+                
+                <div class="form-row">
+                    <label for="precioVenta1">Precio de Venta 1</label>
+                    <input type="number" id="precioVenta1" step="0.01" disabled>
+                </div>
+
+                <div class="form-row">
+                    <label for="IVA">IVA (%)</label>
+                    <input type="number" id="iva" step="0.01" min="0" max="19">
+                </div>
+                
+                <div class="form-row">
+                    <label for="ubicacion">Ubicación</label>
+                    <input type="text" id="ubicacion" disabled>
+                </div>
+            
+                <div class="form-row">
+                    <label for="marca">Marca</label>
+                    <input type="text" id="marca" disabled>
+                </div>
+            
+                <div class="form-row">
+                    <label for="estadoProducto">Estado Producto</label>
+                    <select id="estadoProducto" disabled>
+                        <option value="">Seleccione un Estado del Producto</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="buscarProductoPanel" class="modal">
+            <div class="modal-content">
+                <h2>Buscar Producto</h2>
+                <input type="text" id="buscarProductoInput" placeholder="Buscar por código o descripción">
+                <table id="resultadosBusqueda">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Grupo</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                    <!-- Los resultados se cargarán aquí dinámicamente -->
+                </tbody>
+                </table>
+                <button id="btnCerrarBusqueda">Cerrar</button>
+            </div>
+        </div>
+
+        <!-- Panel de Grupos -->
+        <div id="gruposPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Maestro de Grupos</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoGrupo" class="btn-icon">Nuevo</button>
+                    <button id="btnGuardarGrupo" class="btn-icon" disabled>Guardar</button>
+                    <button id="btnEditarGrupo" class="btn-icon" disabled>Editar</button>
+                    <button id="btnEliminarGrupo" class="btn btn-danger" disabled>Eliminar</button>
+                    <button id="btnCancelarGrupo" class="btn-icon" disabled>Cancelar</button>
+                    <button id="btnCerrarGrupo" class="btn-icon">Cerrar</button>
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="codigoGrupo">* Código</label>
+                    <input type="text" id="codigoGrupo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="descripcionGrupo">* Descripción</label>
+                    <input type="text" id="descripcionGrupo" required disabled>
+                </div>
+                <div class="form-row checkbox-group">
+                    <label><input type="checkbox" id="estadoGrupo" disabled> Estado</label>
+                    <label><input type="checkbox" id="ventaGrupo" disabled> Venta</label>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="buscarGrupo" placeholder="Buscar...">
+            </div>
+            <div class="table-container">
+                <table id="gruposTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                            <th>menupos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los grupos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="confirmDeleteModal" class="modal">
+            <div class="modal-content">
+                <h2>Confirmar eliminación</h2>
+                <p>¿Estás seguro de que deseas eliminar este grupo?</p>
+                <div class="modal-buttons">
+                    <button id="confirmDelete" class="btn btn-danger">Eliminar</button>
+                    <button id="cancelDelete" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Informes -->
+        <div id="informesPanel" class="panel compact-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-chart-bar"></i> Informes</h2>
+                <button class="btn-close">&times;</button>
+            </div>
+            <div class="panel-body">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Escriba palabras clave aquí">
+                </div>
+                <ul id="informesList" class="compact-list">
+                    <li class="expandable">
+                        <div class="main-item">
+                            <span><i class="fas fa-box"></i> Inventario</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <ul class="sub-menu" style="display: none;">
+                            <li><i class="fas fa-chart-line"></i> Compras x Costos</li>
+                            <li><i class="fas fa-file-invoice-dollar"></i> Informe de Compras</li>
+                            <li><i class="fas fa-arrow-right"></i> Entradas de inventario</li>
+                            <li><i class="fas fa-arrow-left"></i> Salidas de inventario</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel de Entradas de Inventario -->
+        <div id="informesEntradasPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Entradas de Inventario</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="entradasInventarioForm">
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha Inicio:</label>
+                        <input type="date" id="fechaInicioEntradas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha Fin:</label>
+                        <input type="date" id="fechaFinEntradas" required>
+                    </div>
+                    <button type="submit" id="btnBuscarEntradas" class="btn btn-primary">Buscar</button>
+                    <button type="submit" id="btnExportarExcelEntradas" class="btn btn-secondary">Exportar Excel</button>
+                </form>
+                <div class="table-responsive mt-3">
+                    <table id="entradasInventarioTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Fecha Creación</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Valor</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel de Compras x Costos -->
+        <div id="informesComprasCostosPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Compras x Costos</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="comprasCostosForm">
+                    <div class="form-group">
+                        <label for="fechaInicioComprasCostos">Fecha Inicio:</label>
+                        <input type="date" id="fechaInicioComprasCostos" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFinComprasCostos">Fecha Fin:</label>
+                        <input type="date" id="fechaFinComprasCostos" required>
+                    </div>
+                    <button type="submit" id="btnBuscarComprasCostos" class="btn btn-primary">Buscar</button>
+                    <button type="button" id="btnExportarExcelComprasCostos" class="btn btn-secondary">Exportar Excel</button>
+                </form>
+                <div class="table-responsive mt-3">
+                    <table id="comprasCostosTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Centro de costos</th>
+                                <th>NIT</th>
+                                <th>Razón Social</th>
+                                <th>Compra</th>
+                                <th>Fra proveedor</th>
+                                <th>Fecha</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Valor</th>
+                                <th>Valor Sin IVA</th>
+                                <th>% IVA</th>
+                                <th>% Desc</th>
+                                <th>Subtotal</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Informe de Compras -->
+        <div id="informesComprasPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Informe de Compras</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="comprasForm">
+                    <div class="form-group">
+                        <label for="fechaInicioCompras">Fecha Inicio:</label>
+                        <input type="date" id="fechaInicioCompras" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFinCompras">Fecha Fin:</label>
+                        <input type="date" id="fechaFinCompras" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Informe:</label>
+                        <div>
+                            <input type="radio" id="detalladasCompras" name="tipoInformeCompras" value="detalladas" checked>
+                            <label for="detalladasCompras">Detalladas</label>
+                            <input type="radio" id="porProductoCompras" name="tipoInformeCompras" value="porProducto">
+                            <label for="porProductoCompras">Por producto</label>
+                            <input type="radio" id="porProveedorCompras" name="tipoInformeCompras" value="porProveedor">
+                            <label for="porProveedorCompras">Por proveedor</label>
+                            <input type="radio" id="porValorCompras" name="tipoInformeCompras" value="porValor">
+                            <label for="porValorCompras">Por valor</label>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnBuscarCompras" class="btn btn-primary">Ver reporte</button>
+                    <button type="button" id="btnExportarExcelCompras" class="btn btn-secondary">Exportar Excel</button>
+                </form>
+                <div class="table-responsive mt-3">
+                    <table id="comprasTable" class="table table-striped">
+                        <thead>
+                            <!-- Las columnas se ajustarán dinámicamente según el tipo de informe -->
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="ordenesCompraPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Órdenes de Compra</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoOrdenCompra" class="btn btn-primary text-black">Nuevo</button>
+                    <button id="btnGuardarOrdenCompra" class="btn btn-success text-black">Guardar</button>
+                    <button id="btnEditarOrdenCompra" class="btn btn-warning text-black">Editar</button>
+                    <button id="btnCancelarOrdenCompra" class="btn btn-secondary text-black">Cancelar</button>
+                    <button id="btnCerrarOrdenCompra" class="btn btn-danger text-black">Cerrar</button>
+                </div>
+            </div>  
+            
+            <div class="panel-body">
+                <form id="ordenCompraForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="consecutivoOrdenCompra">Consecutivo:</label>
+                            <select id="consecutivoOrdenCompra" class="form-control" required></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="numeroOrdenCompra">Número:</label>
+                            <input type="text" id="numeroOrdenCompra" class="form-control" required readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fechaOrdenCompra">Fecha Orden:</label>
+                            <input type="date" id="fechaOrdenCompra" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="proveedorOrdenCompra">Proveedor:</label>
+                            <div class="input-group">
+                                <input type="text" id="proveedorOrdenCompra" class="form-control" readonly>
+                                <input type="text" id="proveedorOrdenCompraDescripcion" class="form-control" readonly>
+                                <button id="btnBuscarProveedor" class="btn btn-outline-secondary" type="button">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bodegaOrdenCompra">Bodega:</label>
+                            <select id="bodegaOrdenCompra" class="form-control" required></select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="centroCostosOrdenCompra">Centro de Costos:</label>
+                            <select id="centroCostosOrdenCompra" class="form-control"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="solicitaOrdenCompra">Solicita:</label>
+                            <input type="text" id="solicitaOrdenCompra" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="apruebaOrdenCompra">Aprueba:</label>
+                            <input type="text" id="apruebaOrdenCompra" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label for="observacionesOrdenCompra">Observaciones:</label>
+                            <textarea id="observacionesOrdenCompra" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input type="checkbox" id="anuladoOrdenCompra" class="form-check-input">
+                                <label class="form-check-label" for="anuladoOrdenCompra">Anulado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input type="checkbox" id="ordenCompletadaOrdenCompra" class="form-check-input">
+                                <label class="form-check-label" for="ordenCompletadaOrdenCompra">Orden Completada</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="totales-section row mt-3">
+                    <div class="col-md-3">
+                        <label for="totalUnidadesOrdenCompra" class="form-label">Total unidades:</label>
+                        <input type="number" id="totalUnidadesOrdenCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="subtotalOrdenCompra" class="form-label">Subtotal:</label>
+                        <input type="number" id="subtotalOrdenCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="valorDescuentoOrdenCompra" class="form-label">Valor Descuento:</label>
+                        <input type="number" id="valorDescuentoOrdenCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="totalImpuestosOrdenCompra" class="form-label">Total Impuestos:</label>
+                        <input type="number" id="totalImpuestosOrdenCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="totalDocumentoOrdenCompra" class="form-label">Total Documento:</label>
+                        <input type="number" id="totalDocumentoOrdenCompra" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="table-responsive mt-3">
+                    <table id="detallesOrdenCompraTable" class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>IdReferencia Buscar con Enter</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad Pedida</th>
+                                <th>Valor Sin IVA</th>
+                                <th>Valor Con IVA</th>
+                                <th>Descuento</th>
+                                <th>IVA</th>
+                                <th>Sub Total</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="proveedoresPanel" class="panel fullscreen">
+            <div class="panel-header">
+                <h2>Maestro de Proveedores</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoProveedor" class="btn btn-primary text-black">Nuevo</button>
+                    <button id="btnGuardarProveedor" class="btn btn-success text-black" disabled>Guardar</button>
+                    <button id="btnEditarProveedor" class="btn btn-warning text-black" disabled>Editar</button>
+                    <button id="btnEliminarProveedor" class="btn btn-danger text-black" disabled>Eliminar</button>
+                    <button id="btnCancelarProveedor" class="btn btn-secondary text-black" disabled>Cancelar</button>
+                    <button id="btnCerrarProveedor" class="btn btn-info">Cerrar</button>
+                </div>
+            </div>
+            
+            <div class="container mt-3">
+                <form id="proveedorForm">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="nit" class="form-label">NIT ó C.C</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="nitProveedor" required disabled>
+                                <input type="text" class="form-control" id="dvProveedor" placeholder="DV" disabled style="max-width: 60px;">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="razonSocial" class="form-label">Razón Social</label>
+                            <input type="text" class="form-control" id="razonSocialProveedor" required disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="nombre1" class="form-label">Nombre1</label>
+                            <input type="text" class="form-control" id="nombre1" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombre2" class="form-label">Nombre2</label>
+                            <input type="text" class="form-control" id="nombre2" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="apellido1" class="form-label">Apellido1</label>
+                            <input type="text" class="form-control" id="apellido1" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido2" class="form-label">Apellido2</label>
+                            <input type="text" class="form-control" id="apellido2" disabled>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="idDepartamento" class="form-label">Departamento</label>
+                            <select class="form-control" id="idDepartamento" required disabled>
+                                <!-- Opciones de departamentos cargadas dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="idCiudad" class="form-label">Ciudad</label>
+                            <select class="form-control" id="idCiudad" required disabled>
+                                <!-- Opciones de ciudades cargadas dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="numeroCuenta" class="form-label">Número de Cuenta</label>
+                            <input type="text" class="form-control" id="numeroCuenta" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cxp" class="form-label">CxP</label>
+                            <input type="text" class="form-control" id="cxp" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="diasCredito" class="form-label">Días de Crédito</label>
+                            <input type="number" class="form-control" id="diasCredito" disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mb-3">
+                                <label for="emailProveedor" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailProveedor" disabled>
+                            </div>
+                            <label for="estado" class="form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="activoProveedor" name="estado" value="true">
+                                <label class="form-check-label" for="activoProveedor">Activo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="inactivoProveedor" name="estado" value="false">
+                                <label class="form-check-label" for="inactivoProveedor">Inactivo</label>
+                            </div>
+                                                    </div>
+                    </div>
+                </form>
+            </div>
+        
+            <div class="mt-4">
+                <table id="proveedoresTable" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nit</th>
+                            <th>Razón Social</th>
+                            <th>Nombre1</th>
+                            <th>Nombre2</th>
+                            <th>Apellido1</th>
+                            <th>Apellido2</th>
+                            <th>Número de Cuenta</th>
+                            <th>CxP</th>
+                            <th>Días de Crédito</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Panel de Estados de Producto -->
+        <div id="estadoProductoPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Maestro de Estados de Producto</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoEstadoProducto" class="btn-icon text-black">Nuevo</button>
+                    <button id="btnGuardarEstadoProducto" class="btn-icon text-black" disabled>Guardar</button>
+                    <button id="btnEditarEstadoProducto" class="btn-icon text-black" disabled>Editar</button>
+                    <button id="btnEliminarEstadoProducto" class="btn btn-danger text-black" disabled>Eliminar</button>
+                    <button id="btnCancelarEstadoProducto" class="btn-icon text-black" disabled>Cancelar</button>
+                    <button id="btnCerrarEstadoProducto" class="btn-icon text-black">Cerrar</button>
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="codigoEstadoProducto">* Código</label>
+                    <input type="text" id="codigoEstadoProducto" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="descripcionEstadoProducto">* Descripción</label>
+                    <input type="text" id="descripcionEstadoProducto" required disabled>
+                </div>
+                <div class="form-row checkbox-group">
+                    <label><input type="checkbox" id="estadoEstadoProducto" disabled> Estado</label>
+                </div>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="buscarEstadoProducto" placeholder="Buscar...">
+            </div>
+            <div class="table-container">
+                <table id="estadosProductoTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los estados de producto se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="informesSalidasPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Salidas de Inventario</h2>
+                <div class="panel-controls">
+                    <button class="btn-close"><i class="icon-close"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="salidasInventarioForm">
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha Inicio:</label>
+                        <input type="date" id="fechaInicioSalidas" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha Fin:</label>
+                        <input type="date" id="fechaFinSalidas" required>
+                    </div>
+                    <button type="submit" id="btnBuscarSalidas" class="btn btn-primary">Buscar</button>
+                    <button type="submit" id="btnExportarExcelSalidas" class="btn btn-secondary">Exportar Excel</button>
+                </form>
+                <div class="table-responsive mt-3">
+                    <table id="salidasInventarioTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Valor</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="consecutivosPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Maestro de Consecutivos</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoConsecutivo" class="btn-icon">Nuevo</button>
+                    <button id="btnGuardarConsecutivo" class="btn-icon" disabled>Guardar</button>
+                    <button id="btnEditarConsecutivo" class="btn-icon" disabled>Editar</button>
+                    <button id="btnCancelarConsecutivo" class="btn-icon" disabled>Cancelar</button>
+                    <button id="btnPrimerRegistro" class="btn-icon">|&lt;</button>
+                    <button id="btnAnteriorRegistro" class="btn-icon">&lt;</button>
+                    <button id="btnSiguienteRegistro" class="btn-icon">&gt;</button>
+                    <button id="btnUltimoRegistro" class="btn-icon">&gt;|</button>
+                    <button id="btnCerrarConsecutivos" class="btn-icon">Cerrar</button>
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="form-row">
+                    <label for="numeroConsecutivo">* Número</label>
+                    <input type="text" id="numeroConsecutivo" required disabled>
+                    <input type="checkbox" id="inactivoConsecutivo" disabled>
+                    <label for="inactivoConsecutivo">Inactivo</label>
+                </div>
+                <div class="form-row">
+                    <label for="descripcionConsecutivo">* Descripción</label>
+                    <input type="text" id="descripcionConsecutivo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="formularioConsecutivo">* Formulario</label>
+                    <select id="formularioConsecutivo" required disabled>
+                        <option value="">Seleccione un formulario</option>
+                        <!-- Opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="prefijoConsecutivo">* Prefijo</label>
+                    <input type="text" id="prefijoConsecutivo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="desdeConsecutivo">* Desde</label>
+                    <input type="number" id="desdeConsecutivo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="hastaConsecutivo">* Hasta</label>
+                    <input type="number" id="hastaConsecutivo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="actualConsecutivo">* Actual</label>
+                    <input type="number" id="actualConsecutivo" required disabled>
+                </div>
+                <div class="form-row">
+                    <label for="resolucionConsecutivo">Resolución</label>
+                    <input type="text" id="resolucionConsecutivo" disabled>
+                </div>
+                <div class="form-row">
+                    <label for="fechaResolucionConsecutivo">Fecha Resolución</label>
+                    <input type="date" id="fechaResolucionConsecutivo" disabled>
+                </div>
+                <div class="form-row">
+                    <label for="observacionesConsecutivo">Observaciones</label>
+                    <textarea id="observacionesConsecutivo" disabled></textarea>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="consecutivosTable">
+                    <thead>
+                        <tr>
+                            <th>Id Consecutivo</th>
+                            <th>Consecutivo</th>
+                            <th>Formulario</th>
+                            <th>Prefijo</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th>Actual</th>
+                            <th>Resolución</th>
+                            <th>Fecha Resolución</th>
+                            <th>Observaciones</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los consecutivos se cargarán dinámicamente aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="proveedoresModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Seleccionar Proveedor</h2>
+                <input type="text" id="buscarProveedorInput" placeholder="Buscar proveedor...">
+                <table id="proveedoresTable">
+                    <thead>
+                        <tr>
+                            <th>NIT</th>
+                            <th>Razón Social</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Telefono</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los proveedores se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="creacionUsuariosPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Creación de Usuarios</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoUsuario" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarUsuario" class="btn btn-success" disabled>Guardar</button>
+                    <button id="btnCancelarUsuario" class="btn btn-secondary" disabled>Cancelar</button>
+                    <button id="btnCerrarCreacionUsuarios" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            <form id="usuarioForm">
+                <div class="form-group mb-3">
+                    <label for="IdUsuario">ID Usuario:</label>
+                    <input type="text" class="form-control" id="IdUsuario" name="IdUsuario" required>
+                </div>
+            
+                <div class="form-group mb-3">
+                    <label for="Descripcion">Nombre:</label>
+                    <input type="text" class="form-control" id="DescripcionUsuarios" name="Descripcion" required>
+                </div>
+            
+                <div class="form-group mb-3">
+                    <label for="Contraseña">Contraseña:</label>
+                    <input type="password" class="form-control" id="Contraseña" name="Contraseña" required>
+                </div>
+            
+                <div class="form-group mb-3">
+                    <label for="Estado">Estado:</label>
+                    <input type="checkbox" id="EstadoUsuarios" name="Estado">
+                </div>
+            
+                <div class="form-group mb-3">
+                    <label for="NivelAcceso">Nivel de Acceso:</label>
+                    <select class="form-control" id="NivelAcceso" name="NivelAcceso" required>
+                        <option value="100">Administrador</option>
+                        <option value="50">Regular</option>
+                    </select>
+                </div>
+            </form>
+                        <div class="mt-4">
+                <table id="usuariosTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID Usuario</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se cargarán los usuarios -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="panelBancos" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Maestro de Bancos</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoBanco" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarBanco" class="btn btn-success" disabled>Guardar</button>
+                    <button id="btnEditarBanco" class="btn btn-warning" disabled>Editar</button>
+                    <button id="btnCancelarBanco" class="btn btn-secondary" disabled>Cancelar</button>
+                    <button id="btnCerrarBancos" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="formBanco" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="codigoBanco" class="form-label">* Código:</label>
+                        <input type="text" id="codigoBanco" class="form-control" required disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="descripcionBanco" class="form-label">* Descripción:</label>
+                        <input type="text" id="descripcionBanco" class="form-control" required disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cuentaBanco" class="form-label">Cuenta:</label>
+                        <input type="text" id="cuentaBanco" class="form-control" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check mt-4">
+                            <input type="checkbox" id="estadoBanco" class="form-check-input" disabled>
+                            <label for="estadoBanco" class="form-check-label">Estado</label>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <label for="saldoInicial" class="form-label">Saldo inicial:</label>
+                        <input type="number" id="saldoInicial" class="form-control" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="recibos" class="form-label">Recibos:</label>
+                        <input type="number" id="recibos" class="form-control" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="egresos" class="form-label">Egresos:</label>
+                        <input type="number" id="egresos" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="ventas" class="form-label">Ventas:</label>
+                        <input type="number" id="ventas" class="form-control" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="disponible" class="form-label">Disponible:</label>
+                        <input type="number" id="disponible" class="form-control" disabled>
+                    </div>
+                </div>
+                
+                <div class="table-responsive mt-4">
+                    <table id="tablaBancos" class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Id Banco</th>
+                                <th>Banco</th>
+                                <th>Cuenta</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Grupos y Permisos de Usuarios -->
+        <div id="gruposPermisosPanel" class="panel">
+            <div class="panel-header">
+                <h2>Gestión de Grupos y Permisos de Usuarios</h2>
+                <button id="btnCerrarGruposPermisos" class="btn btn-close">Cerrar</button>
+            </div>
+            <div class="panel-actions">
+                <div class="btn-group">
+                    <button id="btnNuevoGrupoPermisos" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarGrupoPermisos" class="btn btn-success">Guardar</button>
+                    <button id="btnEliminarGrupoPermisos" class="btn btn-danger">Eliminar</button>
+                </div>
+                <div class="btn-group">
+                    <button id="btnActivarTodo" class="btn btn-info">Activar todo</button>
+                    <button id="btnDesactivarTodo" class="btn btn-warning">Desactivar todo</button>
+                    <button id="btnGuardarPermisos" class="btn btn-success">Guardar Permisos</button>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="left-section">
+                    <h3>Maestro de Grupos</h3>
+                    <div class="form-group">
+                        <label for="idGrupo">Código:</label>
+                        <input type="text" id="idGrupo" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcionGrupo">Descripción:</label>
+                        <input type="text" id="descripcionGrupoPermisos" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="estadoGrupoPermisos"> Estado
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="cambiarFechaActualGrupo"> Cambiar Fecha Actual
+                        </label>
+                    </div>
+                </div>
+                <div class="right-section">
+                    <table id="tablaGrupos">
+                        <thead>
+                            <tr>
+                                <th>Id Grupo</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los grupos se cargarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="permisos-section">
+                <h3>Permisos del Grupo</h3>
+                <div id="permisosContainer">
+                    <!-- Los permisos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <div id="comprasProveedorPanel" class="panel fullscreen" style="display: none;">
+            <div class="panel-header">
+                <h2>Compras de Mercancía</h2>
+                <div class="panel-controls">
+                    <button id="btnNuevoCompra" class="btn btn-primary">Nuevo</button>
+                    <button id="btnGuardarCompra" class="btn btn-success">Guardar</button>
+                    <button id="btnEditarCompra" class="btn btn-warning">Editar</button>
+                    <button id="btnCancelarCompra" class="btn btn-secondary">Cancelar</button>
+                    <button id="btnAnularCompra" class="btn btn-danger">Anular</button>
+                    <button id="btnBuscarCompra" class="btn btn-secondary">Buscar</button>
+                    <button id="btnImprimirCompra" class="btn btn-secondary">Imprimir</button>
+                    <button id="btnSaldosProveedor" class="btn btn-info">Saldos Proveedor</button>
+                    <button id="btnCerrarCompra" class="btn btn-danger">Cerrar</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <form id="compraProveedorForm" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="consecutivoCompra" class="form-label">Consecutivo:</label>
+                        <select id="consecutivoCompra" class="form-select" required>
+                            <option value="COMPRAS PROVEEDOR">COMPRAS PROVEEDOR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="numeroCompra" class="form-label">Número:</label>
+                        <input type="text" id="numeroCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="numeroFactura" class="form-label">Número de Factura:</label>
+                        <input type="text" id="numeroFactura" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="proveedorCompra" class="form-label">Proveedor:</label>
+                        <div class="input-group">
+                            <input type="text" id="proveedorCompra" class="form-control" readonly>
+                            <button class="btn btn-outline-secondary" type="button" id="btnBuscarProveedorCompras">Buscar</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="bodegaCompra" class="form-label">Bodega:</label>
+                        <select id="bodegaCompra" class="form-select">
+                            <option>BODEGA PRINCIPAL</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="centroCostosCompra" class="form-label">Centro de Costos:</label>
+                        <select id="centroCostosCompra" class="form-select"></select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fechaDocumento" class="form-label">Fecha Documento:</label>
+                        <input type="date" id="fechaDocumento" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fechaCreacion" class="form-label">Fecha Creación:</label>
+                        <input type="date" id="fechaCreacion" class="form-control" readonly>
+                    </div>
+                    <div class="col-12">
+                        <label for="observacionesCompra" class="form-label">Observaciones:</label>
+                        <textarea id="observacionesCompra" class="form-control" rows="3"></textarea>
+                    </div>
+                </form>
+                
+                <div class="totales-section row mt-3">
+                    <div class="col-md-2">
+                        <label for="totalUnidades" class="form-label">Total Unidades:</label>
+                        <input type="number" id="totalUnidadesCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="descuentoPorcentaje" class="form-label">Descuento %:</label>
+                        <input type="number" id="descuentoPorcentajeCompra" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="subtotal" class="form-label">Subtotal:</label>
+                        <input type="number" id="subtotalCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="valorDescuento" class="form-label">Valor Descuento:</label>
+                        <input type="number" id="valorDescuentoCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalFlete" class="form-label">Total Flete:</label>
+                        <input type="number" id="totalFleteCompra" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="retefuente" class="form-label">Retefuente:</label>
+                        <input type="number" id="retefuenteCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalIVA" class="form-label">Total IVA:</label>
+                        <input type="number" id="totalIVACompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="reteIVA" class="form-label">ReteIVA:</label>
+                        <input type="checkbox" id="reteIVACompra" class="form-check-input">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalIPC" class="form-label">Total IPC:</label>
+                        <input type="number" id="totalIPCCompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="reteICA" class="form-label">ReteICA:</label>
+                        <input type="checkbox" id="reteICACompra" class="form-check-input">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalIBUA" class="form-label">Total IBUA:</label>
+                        <input type="number" id="totalIBUACompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalICUI" class="form-label">Total ICUI:</label>
+                        <input type="number" id="totalICUICompra" class="form-control" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="totalDocumento" class="form-label">Total Documento:</label>
+                        <input type="number" id="totalDocumentoCompra" class="form-control" readonly>
+                    </div>
+                </div>
+                
+                <div class="table-responsive mt-3">
+                    <table id="detallesCompraTable" class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Unidad</th>
+                                <th>Cantidad</th>
+                                <th>Valor Con IVA</th>
+                                <th>Valor Sin IVA</th>
+                                <th>IVA</th>
+                                <th>Descuento</th>
+                                <th>IPC</th>
+                                <th>ICUI</th>
+                                <th>IBUA</th>
+                                <th>Num Orden...</th>
+                                <th>Num Entra...</th>
+                                <th>Id Centro Costo</th>
+                                <th>precieve...</th>
+                                <th>margen</th>
+                                <th>Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Las filas se agregarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="table-responsive mt-4">
+	<h1>
+	   <center>
+              Bienvenido, {{ descripcion_usuario }}
+           </center>
+        </h1>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        if (typeof XLSX === 'undefined') {
+            console.error('La librería XLSX no está cargada');
+        }
+    </script>
+
+    <script src="/static/js/mensajeBienvenida.js"></script>
+    <script src="/static/js/scripts.js"></script>
+    <!-- <script src="/static/js/busquedaReferencias.js"></script> -->
+    <script src="/static/js/consultaInventario.js"></script>
+    <script src="/static/js/salidasBodegas.js"></script>
+    <script src="/static/js/trasladosBodegas.js"></script>
+    <script src="/static/js/entradasBodegas.js"></script>
+    <script src="/static/js/informesEntradas.js"></script>
+    <script src="/static/js/informesSalidas.js"></script>
+    <script src="/static/js/buscarProducto.js"></script>
+    <script src="/static/js/guardarUnidades.js"></script>
+    <script src="/static/js/guardarSubGrupos.js"></script>
+    <script src="/static/js/guardarSubCategoria.js"></script>
+    <script src="/static/js/estadoProducto.js"></script>
+    <script src="/static/js/proveedores.js"></script>
+    <script src="/static/js/ordenesCompra.js"></script>
+    <script src="/static/js/consecutivos.js"></script>
+    <script src="/static/js/creacionUsuarios.js"></script>
+    <script src="/static/js/paises.js"></script>
+    <script src="/static/js/departamentos.js"></script>
+    <script src="/static/js/ciudades.js"></script>
+    <script src="/static/js/bancos.js"></script>
+    <script src="/static/js/gruposPermisosUsuarios.js"></script>
+    <script src="/static/js/comprasProveedor.js"></script>
+    <script src="/static/js/informeComprasxCostos.js"></script>
+    <script src="/static/js/informeCompras.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script> 
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+</body>
+</html>
